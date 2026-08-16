@@ -1,9 +1,0 @@
-alert http any any -> $HOME_NET 3000 (msg: "SQLi Attempt - Contains singlequote"; flow:established,to_server; content:"'"; nocase; http_uri; sid:10;)
-alert http any any -> $HOME_NET 3000 (msg: "SQLi Attempt - Contains singlequote POST data"; flow:established,to_server; content:"'"; nocase; http_client_body; sid:11;)
-
-alert http any any -> $HOME_NET 3000 (msg: "SQLi Attempt - Contains UNION"; flow:established,to_server; content:"UNION"; nocase; http_uri; sid:12;)
-alert http any any -> $HOME_NET 3000 (msg: "SQLi Attempt - Contains UNION POST data"; flow:established,to_server; content:"UNION"; nocase; http_client_body; sid:13;)
-
-alert http any any -> $HOME_NET 3000 (msg: "SQLi Attempt - Contains comment (--)"; flow:established,to_server; content:"--"; nocase; http_uri; sid:16;)
-alert http any any -> $HOME_NET 3000 (msg: "SQLi Attempt - Contains comment POST data"; flow:established,to_server; content:"--"; nocase; http_client_body; sid:17;)
-
