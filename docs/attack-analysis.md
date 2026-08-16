@@ -554,7 +554,7 @@ Phần lớn response là `401 Unauthorized`, đến request cuối (mật khẩ
 
 #### Hướng tuning
 
-Thêm rule mới bám theo response `401` thay vì chỉ đếm request — chính xác hơn vì loại được các lần login thành công ra khỏi phép đếm.
+Thêm rule mới bám theo response `401` thay vì chỉ đếm request và chính xác hơn vì loại được các lần login thành công ra khỏi phép đếm.
 
 | SID     | Threshold      | Buffer                     | Mục đích                     |
 | ------- | -------------- | --------------------------- | ------------------------------ |
