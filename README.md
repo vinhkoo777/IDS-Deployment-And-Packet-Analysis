@@ -29,12 +29,16 @@ Rule dạng **signature/pattern-based**, match trực tiếp payload trong HTTP 
 | [`sql-detect.rules`](./rules/sql-detect.rules) | SQL Injection |
 | [`XSS-detect.rules`](./rules/XSS-detect.rules) | Cross-Site Scripting |
 | [`Command-Injection-detect.rules`](./rules/Command-Injection-detect.rules) | OS Command Injection |
-| [`PathTraversal-And-LFI.rules`](./rules/PathTraversal-And-LFI.rules) | Path Traversal / LFI |
+| [`PathTraversal-And-LFI.rules`](./rules/PathTraversal.rules) | Path Traversal |
 | [`SSRF-detect.rules`](./rules/SSRF-detect.rules) | Server-Side Request Forgery |
 | [`SSTI-detect.rules`](./rules/SSTI-detect.rules) | Server-Side Template Injection |
 | [`XXE-detect.rules`](./rules/XXE-detect.rules) | XML External Entity |
 | [`File-Upload-detect.rules`](./rules/File-Upload-detect.rules) | Malicious File Upload |
 | [`Malicious-User-Agent-Detect.rules`](./rules/Malicious-User-Agent-Detect.rules) | Recon tool fingerprinting (sqlmap, nikto...) |
+
+- Validated: SQL Injection, SSRF, SSTI, XXE, Malicious User-Agent
+- Rule development only: Chỉ phát triển rule: XSS, Path Traversal, OS Command Injection
+> Note: 3 rule trên chưa được xác thực end-to-end do giới hạn attack surface và request handling của Juice Shop. Các rule vẫn được giữ lại dưới dạng detection development.
 
 ### Network & Behavioral Detection
 
