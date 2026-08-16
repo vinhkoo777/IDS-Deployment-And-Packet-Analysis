@@ -45,7 +45,6 @@ Rule dạng **threshold-based**, dựa trên tần suất/hành vi thay vì matc
 | [`dos-detect-tuned.rules`](./rules/dos-detect-tuned.rules) | DoS / SYN Flood |
 | [`HTTP-Brute-Force-Detect.rules`](./rules/HTTP-Brute-Force-Detect.rules) | HTTP Brute-Force Login |
 | [`Nmap-Scan-Detect.rules`](./rules/Nmap-Scan-Detect.rules) | Port Scan (Nmap SYN) |
-| [`ping-example.rules`](./rules/ping-example.rules) | ICMP Sweep |
 
 ## Documentation
 
