@@ -1,0 +1,3 @@
+alert http any any -> $HOME_NET 3000 (msg:"XXE Attempt - External Entity"; flow:established,to_server; http.request_body; pcre:"/<!ENTITY\s+[^>]*(?:SYSTEM|PUBLIC)\s+/i"; sid:7001001; rev:2;)
+alert http any any -> $HOME_NET 3000 (msg:"XXE Attempt - ENTITY"; flow:established,to_server; http.request_body; pcre:"/<!ENTITY\s*[^>]*/i"; sid:7001002; rev:1;)
+

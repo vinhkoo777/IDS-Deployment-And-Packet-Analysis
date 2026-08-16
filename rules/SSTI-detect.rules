@@ -1,0 +1,8 @@
+alert http any any -> $HOME_NET 3000 (msg:"SSTI Attempt - Double Curly Braces"; flow:established,to_server; http.request_body; pcre:"/\{\{[^}]*\}\}/i"; sid:6001001; rev:1;)
+alert http any any -> $HOME_NET 3000 (msg:"SSTI Attempt - Double Curly Braces URI"; flow:established,to_server; http.uri; pcre:"/\{\{[^}]*\}\}/i"; sid:6001002; rev:1;)
+
+alert http any any -> $HOME_NET 3000 (msg:"SSTI Attempt - Dollar/Hash Expression"; flow:established,to_server; http.request_body; pcre:"/(\$|\#)\{[^}]*\}/i"; sid:6001003; rev:1;)
+alert http any any -> $HOME_NET 3000 (msg:"SSTI Attempt - Dollar/Hash Expression URI"; flow:established,to_server; http.uri; pcre:"/(\$|\#)\{[^}]*\}/i"; sid:6001004; rev:1;)
+
+alert http any any -> $HOME_NET 3000 (msg:"SSTI Attempt - ERB Expression"; flow:established,to_server; http.request_body; pcre:"/\<\%[^>]*=.*\%\>/i"; sid:6001005; rev:1;)
+alert http any any -> $HOME_NET 3000 (msg:"SSTI Attempt - ERB Expression URI"; flow:established,to_server; http.uri; pcre:"/\<\%[^>]*=.*\%\>/i"; sid:6001006; rev:1;)

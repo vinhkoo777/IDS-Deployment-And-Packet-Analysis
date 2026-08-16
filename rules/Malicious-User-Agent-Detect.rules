@@ -1,0 +1,1 @@
+alert http any any -> $HOME_NET 3000 (msg:"Malicious User Agent"; flow:established,to_server; http.user_agent; pcre:"/(sqlmap|nikto|dirbuster|gobuster|wpscan)/i"; sid:8001001; rev:1;)

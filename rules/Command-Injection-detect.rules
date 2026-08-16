@@ -1,0 +1,20 @@
+alert http any any -> $HOME_NET 3000 (msg:"Command Injection - whoami"; flow:established,to_server; http.request_body; pcre:"/(\;|\|)\s*whoami.*/i"; sid:4001001; rev:1;)
+alert http any any -> $HOME_NET 3000 (msg:"Command Injection - whoami URI"; flow:established,to_server; http.uri; pcre:"/(\;|\|)\s*whoami.*/i"; sid:4001002; rev:1;)
+
+alert http any any -> $HOME_NET 3000 (msg:"Command Injection - id"; flow:established,to_server; http.request_body; pcre:"/(\;|\|)\s*id.*/i"; sid:4001003; rev:1;)
+alert http any any -> $HOME_NET 3000 (msg:"Command Injection - id URI"; flow:established,to_server; http.uri; pcre:"/(\;|\|)\s*id.*/i"; sid:4001004; rev:1;)
+
+alert http any any -> $HOME_NET 3000 (msg:"Command Injection - command substitution whoami"; flow:established,to_server; http.request_body; pcre:"/\$\([^)]*whoami\).*/i"; sid:4001005; rev:1;)
+alert http any any -> $HOME_NET 3000 (msg:"Command Injection - command substitution whoami URI"; flow:established,to_server; http.uri; pcre:"/\$\([^)]*whoami\).*/i"; sid:4001006; rev:1;)
+
+alert http any any -> $HOME_NET 3000 (msg:"Command Injection - ping"; flow:established,to_server; http.request_body; pcre:"/(\;|\||\&\&)\s*ping.*/i"; sid:4001007; rev:2;)
+alert http any any -> $HOME_NET 3000 (msg:"Command Injection - ping URI"; flow:established,to_server; http.uri; pcre:"/(\;|\||\&\&)\s*ping.*/i"; sid:400108; rev:2;)
+
+alert http any any -> $HOME_NET 3000 (msg:"Command Injection - netcat"; flow:established,to_server; http.request_body; pcre:"/(\;|\||\&\&)\s*nc\b.*/i"; sid:4001009; rev:2;)
+alert http any any -> $HOME_NET 3000 (msg:"Command Injection - netcat URI"; flow:established,to_server; http.uri; pcre:"/(\;|\||\&\&)\s*nc\b.*/i"; sid:4001010; rev:2;)
+
+alert http any any -> $HOME_NET 3000 (msg:"Command Injection - curl"; flow:established,to_server; http.request_body; pcre:"/(\;|\||\&\&)\s*curl\b.*/i"; sid:4001011; rev:2;)
+alert http any any -> $HOME_NET 3000 (msg:"Command Injection - curl URI"; flow:established,to_server; http.uri; pcre:"/(\;|\||\&\&)\s*curl\b.*/i"; sid:4001012; rev:2;)
+
+alert http any any -> $HOME_NET 3000 (msg:"Command Injection - sleep"; flow:established,to_server; http.request_body; pcre:"/(\;|\||\&\&)\s*sleep\s+\d+.*/i"; sid:4001013; rev:2;)
+alert http any any -> $HOME_NET 3000 (msg:"Command Injection - sleep URI"; flow:established,to_server; http.uri; pcre:"/(\;|\||\&\&)\s*sleep\s+\d+.*/i"; sid:4001014; rev:2;)

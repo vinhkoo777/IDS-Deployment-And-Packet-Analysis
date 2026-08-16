@@ -1,0 +1,23 @@
+alert http any any -> $HOME_NET 3000 (msg:"SQLi Attempt - quote with OR/UNION/SELECT"; flow:established,to_server; http.request_body; pcre:"/['\"]\s*(OR|UNION|SELECT)\b/i"; sid:1200001; rev:1;)
+alert http any any -> $HOME_NET 3000 (msg:"SQLi Attempt - quote with OR/UNION/SELECT URI"; flow:established,to_server; http.uri; pcre:"/['\"]\s*(OR|UNION|SELECT)\b/i"; sid:1200002; rev:1;)
+
+alert http any any -> $HOME_NET 3000 (msg:"SQLi Attempt - SQL Comment Injection"; flow:established,to_server; http.request_body; pcre:"/['\"]\s*(--|#|\/\*)/i"; sid:1200003; rev:1;)
+alert http any any -> $HOME_NET 3000 (msg:"SQLi Attempt - SQL Comment Injection URI"; flow:established,to_server; http.uri; pcre:"/['\"]\s*(--|#|\/\*)/i"; sid:1200004; rev:1;)
+
+alert http any any -> $HOME_NET 3000 (msg:"SQLi Attempt - Retrieve Database Contents"; flow:established,to_server; http.request_body; pcre:"/information_schema\.tables.*(--|#|\/\*)/i"; sid:1200005; rev:1;)
+alert http any any -> $HOME_NET 3000 (msg:"SQLi Attempt - Retrieve Database Contents URI"; flow:established,to_server; http.uri; pcre:"/information_schema\.tables.*(--|#|\/\*)/i"; sid:1200006; rev:1;)
+
+alert http any any -> $HOME_NET 3000 (msg:"SQLi Attempt - CASE/IF Expression"; flow:established,to_server; http.request_body; pcre:"/['\"]\s*(CASE|IF)\b/i"; sid:1200007; rev:1;)
+alert http any any -> $HOME_NET 3000 (msg:"SQLi Attempt - CASE/IF Expression URI"; flow:established,to_server; http.uri; pcre:"/['\"]\s*(CASE|IF)\b/i"; sid:1200008; rev:1;)
+
+alert http any any -> $HOME_NET 3000 (msg:"SQLi Attempt - Time-based"; flow:established,to_server; http.request_body; pcre:"/['\"]\s*(SLEEP|BENCHMARK)\b/i"; sid:1200009; rev:1;)
+alert http any any -> $HOME_NET 3000 (msg:"SQLi Attempt - Time-based URI"; flow:established,to_server; http.uri; pcre:"/['\"]\s*(SLEEP|BENCHMARK)\b/i"; sid:1200010; rev:1;)
+
+alert http any any -> $HOME_NET 3000 (msg:"SQLi Attempt - Error-based"; flow:established,to_server; http.request_body; pcre:"/['\"]\s*(EXTRACTVALUE|UPDATEXML)\b/i"; sid:1200011; rev:1;)
+alert http any any -> $HOME_NET 3000 (msg:"SQLi Attempt - Error-based URI"; flow:established,to_server; http.uri; pcre:"/['\"]\s*(EXTRACTVALUE|UPDATEXML)\b/i"; sid:1200012; rev:1;)
+
+alert http any any -> $HOME_NET 3000 (msg:"SQLi Attempt - File Access"; flow:established,to_server; http.request_body; pcre:"/['\"]\s*(LOAD_FILE|INTO\s+OUTFILE)\b/i"; sid:1200013; rev:1;)
+alert http any any -> $HOME_NET 3000 (msg:"SQLi Attempt - File Access URI"; flow:established,to_server; http.uri; pcre:"/['\"]\s*(LOAD_FILE|INTO\s+OUTFILE)\b/i"; sid:1200014; rev:1;)
+
+alert http any any -> $HOME_NET 3000 (msg:"SQLi Attempt - Dangerous SQL Functions"; flow:established,to_server; http.request_body; pcre:"/(CONCAT|DATABASE|VERSION|USER)\s*\(/i"; sid:1200015; rev:1;)
+alert http any any -> $HOME_NET 3000 (msg:"SQLi Attempt - Dangerous SQL Functions URI"; flow:established,to_server; http.uri; pcre:"/(CONCAT|DATABASE|VERSION|USER)\s*\(/i"; sid:1200016; rev:1;)

@@ -1,0 +1,17 @@
+alert http any any -> $HOME_NET 3000 (msg:"SSRF Attempt - IPv4 Loopback"; flow:established,to_server; http.request_body; pcre:"/http:\/\/127\.0\.0\.1(?::\d+)?/i"; sid:3001001; rev:1;)
+alert http any any -> $HOME_NET 3000 (msg:"SSRF Attempt - IPv4 Loopback URI"; flow:established,to_server; http.uri; pcre:"/http:\/\/127\.0\.0\.1(?::\d+)?/i"; sid:3001002; rev:1;)
+
+alert http any any -> $HOME_NET 3000 (msg:"SSRF Attempt - Localhost"; flow:established,to_server; http.request_body; pcre:"/http:\/\/localhost(?::\d+)?/i"; sid:3001003; rev:1;)
+alert http any any -> $HOME_NET 3000 (msg:"SSRF Attempt - Localhost URI"; flow:established,to_server; http.uri; pcre:"/http:\/\/localhost(?::\d+)?/i"; sid:3001004; rev:1;)
+
+alert http any any -> $HOME_NET 3000 (msg:"SSRF Attempt - IPv6 Loopback"; flow:established,to_server; http.request_body; pcre:"/http:\/\/\[::1\](?::\d+)?/i"; sid:3001005; rev:1;)
+alert http any any -> $HOME_NET 3000 (msg:"SSRF Attempt - IPv6 Loopback URI"; flow:established,to_server; http.uri; pcre:"/http:\/\/\[::1\](?::\d+)?/i"; sid:3001006; rev:1;)
+
+alert http any any -> $HOME_NET 3000 (msg:"SSRF Attempt - Local File Access"; flow:established,to_server; http.request_body; pcre:"/file:\/\/\/etc\/passwd/i"; sid:3001007; rev:1;)
+alert http any any -> $HOME_NET 3000 (msg:"SSRF Attempt - Local File Access URI"; flow:established,to_server; http.uri; pcre:"/file:\/\/\/etc\/passwd/i"; sid:3001008; rev:1;)
+
+alert http any any -> $HOME_NET 3000 (msg:"SSRF Attempt - IPv4 Loopback Octal"; flow:established,to_server; http.request_body; pcre:"/http:\/\/0177\.0\.0\.1(?::\d+)?/i"; sid:3001009; rev:1;)
+alert http any any -> $HOME_NET 3000 (msg:"SSRF Attempt - IPv4 Loopback Octal URI"; flow:established,to_server; http.uri; pcre:"/http:\/\/0177\.0\.0\.1(?::\d+)?/i"; sid:3001010; rev:1;)
+
+alert http any any -> $HOME_NET 3000 (msg:"SSRF Attempt - IPv4 Loopback Decimal"; flow:established,to_server; http.request_body; pcre:"/http:\/\/2130706433(?::\d+)?/i"; sid:3001011; rev:1;)
+alert http any any -> $HOME_NET 3000 (msg:"SSRF Attempt - IPv4 Loopback Decimal URI"; flow:established,to_server; http.uri; pcre:"/http:\/\/2130706433(?::\d+)?/i"; sid:3001012; rev:1;)

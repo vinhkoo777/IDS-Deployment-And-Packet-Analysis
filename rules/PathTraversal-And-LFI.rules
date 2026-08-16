@@ -1,0 +1,23 @@
+alert http any any -> $HOME_NET 3000 (msg:"Path Traversal - ../etc/passwd"; flow:established,to_server; http.request_body; pcre:"/\.\.\/etc\/passwd/i"; sid:2001001; rev:1;)
+alert http any any -> $HOME_NET 3000 (msg:"Path Traversal - ../etc/passwd URI"; flow:established,to_server; http.uri; pcre:"/\.\.\/etc\/passwd/i"; sid:2001002; rev:1;)
+
+alert http any any -> $HOME_NET 3000 (msg:"Path Traversal - URL Encoded ../etc/passwd"; flow:established,to_server; http.request_body; pcre:"/\.\.%2fetc%2fpasswd/i"; sid:2001003; rev:1;)
+alert http any any -> $HOME_NET 3000 (msg:"Path Traversal - URL Encoded ../etc/passwd URI"; flow:established,to_server; http.uri; pcre:"/\.\.%2fetc%2fpasswd/i"; sid:2001004; rev:1;)
+
+alert http any any -> $HOME_NET 3000 (msg:"Path Traversal - Double Encoded ../etc/passwd"; flow:established,to_server; http.request_body; pcre:"/\.\.%252fetc%252fpasswd/i"; sid:2001005; rev:1;)
+alert http any any -> $HOME_NET 3000 (msg:"Path Traversal - Double Encoded ../etc/passwd URI"; flow:established,to_server; http.uri; pcre:"/\.\.%252fetc%252fpasswd/i"; sid:2001006; rev:1;)
+
+alert http any any -> $HOME_NET 3000 (msg:"Path Traversal - Double Slash etc/passwd"; flow:established,to_server; http.request_body; pcre:"/\.\.\/\/etc\/\/passwd/i"; sid:2001007; rev:1;)
+alert http any any -> $HOME_NET 3000 (msg:"Path Traversal - Double Slash etc/passwd URI"; flow:established,to_server; http.uri; pcre:"/\.\.\/\/etc\/\/passwd/i"; sid:2001008; rev:1;)
+
+alert http any any -> $HOME_NET 3000 (msg:"Path Traversal - Null Byte /etc/passwd"; flow:established,to_server; http.request_body; pcre:"/\/etc\/passwd%00/i"; sid:2001009; rev:1;)
+alert http any any -> $HOME_NET 3000 (msg:"Path Traversal - Null Byte /etc/passwd URI"; flow:established,to_server; http.uri; pcre:"/\/etc\/passwd%00/i"; sid:2001010; rev:1;)
+
+alert http any any -> $HOME_NET 3000 (msg:"LFI - PHP Filter Base64"; flow:established,to_server; http.request_body; pcre:"/php:\/\/filter\/convert\.base64-encode\/resource=.*/i"; sid:2001011; rev:1;)
+alert http any any -> $HOME_NET 3000 (msg:"LFI - PHP Filter Base64 URI"; flow:established,to_server; http.uri; pcre:"/php:\/\/filter\/convert\.base64-encode\/resource=.*/i"; sid:2001012; rev:1;)
+
+alert http any any -> $HOME_NET 3000 (msg:"Path Traversal - ../boot.ini"; flow:established,to_server; http.request_body; pcre:"/\.\.\/boot\.ini/i"; sid:2001013; rev:1;)
+alert http any any -> $HOME_NET 3000 (msg:"Path Traversal - ../boot.ini URI"; flow:established,to_server; http.uri; pcre:"/\.\.\/boot\.ini/i"; sid:2001014; rev:1;)
+
+alert http any any -> $HOME_NET 3000 (msg:"Path Traversal - Unicode Encoded /etc/passwd"; flow:established,to_server; http.request_body; pcre:"/\.\.%c0%afetc%c0%afpasswd/i"; sid:2001015; rev:1;)
+alert http any any -> $HOME_NET 3000 (msg:"Path Traversal - Unicode Encoded /etc/passwd URI"; flow:established,to_server; http.uri; pcre:"/\.\.%c0%afetc%c0%afpasswd/i"; sid:2001016; rev:1;)
