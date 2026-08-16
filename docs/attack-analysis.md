@@ -627,7 +627,6 @@ Hình trên cho ta thấy rằng các port đã bị nmap scan ta có thể đ�
 #### Vấn đề rule gốc
 
 - Scope `any -> any`, chưa giới hạn đích `$HOME_NET`.
-- Port `445` bị liệt kê **trùng lặp** trong danh sách uncommon-port.
 - Threshold common-ports 20/10s chỉ bắt scan nhanh, dễ bỏ sót scan chậm (`-T1`/`-T2`).
 - `type threshold` thay vì `type both` không nhất quán với các rule khác trong bộ.
 
