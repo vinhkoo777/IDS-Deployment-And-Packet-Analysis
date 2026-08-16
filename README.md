@@ -10,17 +10,6 @@ Triển khai **Suricata IDS** trên môi trường lab thực chiến để giá
 - [Custom Rules](#custom-rules)
 - [Documentation](#documentation)
 
-## Giới thiệu
-
-**IDS Deployment And Packet Analysis** là dự án triển khai hệ thống phát hiện xâm nhập (Intrusion Detection System) sử dụng **Suricata** trong môi trường lab có kiểm soát.
-
-Dự án tập trung vào:
-- **Deploy và cấu hình Suricata IDS** trên Ubuntu 24.04 để giám sát network traffic trong thời gian thực
-- **Viết custom detection rules** cho các kịch bản tấn công: SQL Injection, DoS, ICMP scan
-- **Sinh attack traffic** từ Kali Linux, capture và phân tích PCAP bằng Wireshark
-- **Tune rules** để giảm false positives trong khi vẫn đảm bảo detection coverage
-- **Map toàn bộ attack scenarios** sang MITRE ATT&CK TTPs
-
 ## Kiến trúc hạ tầng
 
 <img width="1129" height="713" alt="image" src="https://github.com/user-attachments/assets/f19ddfe4-e78e-451f-8fc9-69cd0ee2425f" />
@@ -29,10 +18,39 @@ Dự án tập trung vào:
 
 Xem hướng dẫn cài đặt chi tiết tại [`docs/lab-setup.md`](./docs/lab-setup.md).
 
+## Custom Rules
+
+### Web Application Detection
+
+Rule dạng **signature/pattern-based**, match trực tiếp payload trong HTTP request (`http.uri`, `http.request_body`, `http.user_agent`) nhắm vào OWASP JuiceShop (port 3000).
+
+| Rule File | Attack Type |
+|---|---|
+| [`sql-detect.rules`](./rules/sql-detect.rules) | SQL Injection |
+| [`XSS-detect.rules`](./rules/XSS-detect.rules) | Cross-Site Scripting |
+| [`Command-Injection-detect.rules`](./rules/Command-Injection-detect.rules) | OS Command Injection |
+| [`PathTraversal-And-LFI.rules`](./rules/PathTraversal-And-LFI.rules) | Path Traversal / LFI |
+| [`SSRF-detect.rules`](./rules/SSRF-detect.rules) | Server-Side Request Forgery |
+| [`SSTI-detect.rules`](./rules/SSTI-detect.rules) | Server-Side Template Injection |
+| [`XXE-detect.rules`](./rules/XXE-detect.rules) | XML External Entity |
+| [`File-Upload-detect.rules`](./rules/File-Upload-detect.rules) | Malicious File Upload |
+| [`Malicious-User-Agent-Detect.rules`](./rules/Malicious-User-Agent-Detect.rules) | Recon tool fingerprinting (sqlmap, nikto...) |
+
+### Network & Behavioral Detection
+
+Rule dạng **threshold-based**, dựa trên tần suất/hành vi thay vì match nội dung đây là nhóm áp dụng **rule tuning** (điều chỉnh `count`/`seconds`) để cân bằng false positive/negative.
+
+| Rule File | Attack Type |
+|---|---|
+| [`dos-detect-tuned.rules`](./rules/dos-detect-tuned.rules) | DoS / SYN Flood |
+| [`HTTP-Brute-Force-Detect.rules`](./rules/HTTP-Brute-Force-Detect.rules) | HTTP Brute-Force Login |
+| [`Nmap-Scan-Detect.rules`](./rules/Nmap-Scan-Detect.rules) | Port Scan (Nmap SYN) |
+| [`ping-example.rules`](./rules/ping-example.rules) | ICMP Sweep |
+
 ## Documentation
 
 | File | Nội dung |
 |------|----------|
 | [`docs/lab-setup.md`](./docs/lab-setup.md) | Kiến trúc mạng & hướng dẫn dựng lab |
-| [`docs/attack-analysis.md`](./docs/attack-analysis.md) | Phân tích chi tiết từng attack scenario |
+| [`docs/attack-analysis.md`](./docs/attack-analysis.md) | Phân tích chi tiết từng attack scenario + rule tuning |
 | [`config/suricata.yaml`](./config/suricata.yaml) | File cấu hình Suricata đã được tùy chỉnh |
