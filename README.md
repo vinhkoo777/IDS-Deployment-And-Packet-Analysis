@@ -29,7 +29,7 @@ Rule dạng **signature/pattern-based**, match trực tiếp payload trong HTTP 
 | [`sql-detect.rules`](./rules/sql-detect.rules) | SQL Injection |
 | [`XSS-detect.rules`](./rules/XSS-detect.rules) | Cross-Site Scripting |
 | [`Command-Injection-detect.rules`](./rules/Command-Injection-detect.rules) | OS Command Injection |
-| [`PathTraversal-And-LFI.rules`](./rules/PathTraversal.rules) | Path Traversal |
+| [`PathTraversal.rules`](./rules/PathTraversal.rules) | Path Traversal |
 | [`SSRF-detect.rules`](./rules/SSRF-detect.rules) | Server-Side Request Forgery |
 | [`SSTI-detect.rules`](./rules/SSTI-detect.rules) | Server-Side Template Injection |
 | [`XXE-detect.rules`](./rules/XXE-detect.rules) | XML External Entity |
