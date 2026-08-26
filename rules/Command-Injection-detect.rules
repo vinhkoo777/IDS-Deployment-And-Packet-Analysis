@@ -8,7 +8,7 @@ alert http any any -> $HOME_NET 3000 (msg:"Command Injection - command substitut
 alert http any any -> $HOME_NET 3000 (msg:"Command Injection - command substitution whoami URI"; flow:established,to_server; http.uri; pcre:"/\$\([^)]*whoami\).*/i"; sid:4001006; rev:1;)
 
 alert http any any -> $HOME_NET 3000 (msg:"Command Injection - ping"; flow:established,to_server; http.request_body; pcre:"/(\;|\||\&\&)\s*ping.*/i"; sid:4001007; rev:2;)
-alert http any any -> $HOME_NET 3000 (msg:"Command Injection - ping URI"; flow:established,to_server; http.uri; pcre:"/(\;|\||\&\&)\s*ping.*/i"; sid:400108; rev:2;)
+alert http any any -> $HOME_NET 3000 (msg:"Command Injection - ping URI"; flow:established,to_server; http.uri; pcre:"/(\;|\||\&\&)\s*ping.*/i"; sid:4001008; rev:2;)
 
 alert http any any -> $HOME_NET 3000 (msg:"Command Injection - netcat"; flow:established,to_server; http.request_body; pcre:"/(\;|\||\&\&)\s*nc\b.*/i"; sid:4001009; rev:2;)
 alert http any any -> $HOME_NET 3000 (msg:"Command Injection - netcat URI"; flow:established,to_server; http.uri; pcre:"/(\;|\||\&\&)\s*nc\b.*/i"; sid:4001010; rev:2;)
