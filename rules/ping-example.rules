@@ -1,1 +1,1 @@
-alert icmp any any -> $HOME_NET any (msg:"PING command"; classtype:attemped-ping; sid:1; rev:1;)
+alert icmp any any -> $HOME_NET any (msg:"PING command"; sid:1; rev:1;)
