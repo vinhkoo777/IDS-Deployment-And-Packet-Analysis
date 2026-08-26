@@ -54,4 +54,4 @@ Rule dạng **threshold-based**, dựa trên tần suất/hành vi thay vì matc
 | File | Nội dung |
 |------|----------|
 | [`docs/lab-setup.md`](./docs/lab-setup.md) | Kiến trúc mạng & hướng dẫn dựng lab |
-| [`docs/attack-analysis.md`](./docs/attack-analysis.md) | Phân tích chi tiết từng attack scenario + rule tuning |
+| [`docs/attack-analysis.md`](./docs/attack-analysis.md) | Các attack scenario, Suricata alert và packet analysis |
