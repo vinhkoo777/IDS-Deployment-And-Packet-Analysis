@@ -53,7 +53,7 @@ sudo apt-get install suricata
 ```bash
 sudo nano /etc/suricata/suricata.yaml   
 ```
-Tại phần **address-groups** ở mục **HOME_NET:** Tôi sẽ để dãi ip là `192.168.15.0/24` thì đây sẽ là dãy ip mà tôi sẽ muốn suricata quan sát các traffic đến và đi. 
+Tại phần **address-groups** ở mục **HOME_NET:** Tôi sẽ để dãi ip là `192.168.15.0/24`, đại diện cho dải mạng nội bộ/protected network được sử dụng trong các Suricata rule. Việc Suricata thực sự capture traffic nào phụ thuộc vào interface và network configuration của lab.
 
 <img width="1423" height="282" alt="image" src="https://github.com/user-attachments/assets/704c5368-a524-41e4-bed9-94b4da860108" />
 
@@ -120,7 +120,7 @@ sudo nano /etc/suricata/suricata.yaml
 
 <img width="772" height="267" alt="image" src="https://github.com/user-attachments/assets/85ae5be2-a326-48b3-9b65-240fc8a45ad8" />
 
-Tiếp ta tiến hành lưu lại config và thực hiện lệnh dưới đây để update config.
+Tiếp theo, thực hiện lệnh dưới đây để cập nhật ruleset của Suricata
 
 ```bash
 sudo suricata-update
@@ -149,7 +149,7 @@ sudo suricata -c /etc/suricata/suricata.yaml -i ens33 -v
 
 ### ICMP Detection (ping-example.rules)
 
-Để kiểm tra rule phát hiện ICMP, trên máy Kali Linux thực hiện lệnh ping đến máy Suricata.
+Để kiểm tra rule phát hiện ICMP, trên máy Kali Linux thực hiện lệnh ping đến máy JuiceShop.
 
 ```bash
 ping 192.168.15.128
@@ -161,7 +161,7 @@ Sau đó kiểm tra alert log trên máy Suricata bằng lệnh.
 sudo tail -f /var/log/suricata/fast.log
 ```
 
-Nếu rule hoạt động đúng, ta sẽ thấy alert xuất hiện trong log với nội dung `PING command`. Thì Kali ping đến JuiceShop (192.168.15.128) và Suricata monitor traffic trên cùng network segment nên vẫn bắt được gói ICMP này và tạo alert.
+Kali thực hiện ping đến JuiceShop (192.168.15.128). Trong cấu hình VMware lab hiện tại, traffic ICMP này có thể được quan sát trên interface ens33 của máy Suricata, vì vậy rule ICMP được kích hoạt và alert được ghi lại trong fast.log.
 
 <img width="1433" height="99" alt="image" src="https://github.com/user-attachments/assets/a39bb547-aa72-44b2-98ab-49264858f817" />
 
