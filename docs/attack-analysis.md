@@ -261,7 +261,6 @@ Trong hình là đoạn payload test SSTI (`#{7*7}`) đã được ghi lại tro
 | Tactic         | Technique                         | ID    |
 | -------------- | ---------------------------------- | ----- |
 | Initial Access | Exploit Public-Facing Application | T1190 |
-| Execution      | Command and Scripting Interpreter | T1059 |
  
 ---
  
@@ -462,8 +461,8 @@ Giảm threshold để tăng độ nhạy, đồng thời giữ `track by_dst` v
 
 | SID | Threshold      | Hướng                      | Kỹ thuật  |
 | --- | -------------- | -------------------------- | --------- |
-| 5   | 1000 packet/5s | Inbound (EXTERNAL → HOME)  | SYN Flood |
-| 6   | 1000 packet/5s | Outbound (HOME → EXTERNAL) | SYN Flood |
+| 5   | 1000 packet/5s | Inbound (EXTERNAL -> HOME)  | SYN Flood |
+| 6   | 1000 packet/5s | Outbound (HOME -> EXTERNAL) | SYN Flood |
 
 #### Vì sao giảm false negative
 
@@ -566,7 +565,7 @@ Thêm rule mới bám theo response `401` thay vì chỉ đếm request và chí
 #### Full Rules
 
 ```
-alert http $HOME_NET 3000 -> any any ( msg:"[TUNED] HTTP Brute-Force - Repeated 401 Responses"; flow:established,from_server; http.stat_code; content:"401"; threshold:type both, track by_dst, count 5, seconds 60; sid:9000002; rev:1; )
+alert http $HOME_NET 3000 -> any any ( msg:"[TUNED] HTTP Brute-Force - Repeated 401 Responses"; flow:established,from_server; http.stat_code; content:"401"; threshold:type both, track by_dst, count 5, seconds 60; sid:9000001; rev:1; )
 ```
 
 ---
@@ -612,13 +611,13 @@ Filter port bị scan trúng (SYN-ACK từ target):
 tcp.flags.syn==1 && tcp.flags.ack==1 && ip.src==192.168.15.131
 ```
 
-Hình trên cho ta thấy rằng các port đã bị nmap scan ta có thể đối chiếu lại với kết quả của nmap
+Các gói SYN/ACK từ target cho thấy những port mở đã phản hồi trong quá trình Nmap SYN scan. Có thể đối chiếu các port này với kết quả Nmap.
 
 #### MITRE ATT&CK Mapping
 
 | Tactic         | Technique                                | ID        |
 | -------------- | ------------------------------------------ | --------- |
-| Reconnaissance | Active Scanning: Vulnerability Scanning    | T1595.002 |
+| Discovery| Network Service Discovery| T1046|
 
 ### Rule Tuning - Nmap Scan Detection
 
@@ -630,15 +629,15 @@ Hình trên cho ta thấy rằng các port đã bị nmap scan ta có thể đ�
 
 #### Hướng tuning
 
-- Scope lại đích `$HOME_NET`, bỏ port `445` trùng.
+- Scope lại đích `$HOME_NET`.
 - Hạ threshold common-ports xuống 10/20s để nhạy hơn với scan chậm.
 - Đổi `type both` cho đồng bộ.
 
 #### Full Rules
 
 ```suricata
-alert tcp any any -> any [21,22,23,25,53,80,88,110,135,137,138,139,143,161,389,443,445,465,514,587,636,853,993,995,1194,1433,1720,3306,3389,8080,8443,11211,27017,51820] (msg:"[TUNED] NMAP SYN Scan - Common Ports"; flow:to_server,stateless; flags:S; threshold:type both, track by_src, count 10, seconds 20; classtype:attempted-recon; sid:1100001; rev:2;)
+alert tcp any any -> $HOME_NET [21,22,23,25,53,80,88,110,135,137,138,139,143,161,389,443,445,465,514,587,636,853,993,995,1194,1433,1720,3306,3389,8080,8443,11211,27017,51820] (msg:"[TUNED] NMAP SYN Scan - Common Ports"; flow:to_server,stateless; flags:S; threshold:type both, track by_src, count 10, seconds 20; classtype:attempted-recon; sid:1100001; rev:2;)
 
-alert tcp any any -> any ![21,22,23,25,53,80,88,110,135,137,138,139,143,161,389,443,445,465,514,587,636,853,993,995,1194,1433,1720,3306,3389,8080,8443,11211,27017,51820] (msg:"[TUNED] NMAP SYN Scan - Uncommon Port"; flow:to_server,stateless; flags:S; threshold:type both, track by_src, count 7, seconds 135; classtype:attempted-recon; sid:1100002; rev:2;)
+alert tcp any any -> $HOME_NET ![21,22,23,25,53,80,88,110,135,137,138,139,143,161,389,443,445,465,514,587,636,853,993,995,1194,1433,1720,3306,3389,8080,8443,11211,27017,51820] (msg:"[TUNED] NMAP SYN Scan - Uncommon Port"; flow:to_server,stateless; flags:S; threshold:type both, track by_src, count 7, seconds 135; classtype:attempted-recon; sid:1100002; rev:2;)
 ```
 
