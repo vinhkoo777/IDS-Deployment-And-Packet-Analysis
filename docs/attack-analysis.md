@@ -565,7 +565,7 @@ Thêm rule mới bám theo response `401` thay vì chỉ đếm request và chí
 #### Full Rules
 
 ```
-alert http $HOME_NET 3000 -> any any ( msg:"[TUNED] HTTP Brute-Force - Repeated 401 Responses"; flow:established,from_server; http.stat_code; content:"401"; threshold:type both, track by_dst, count 5, seconds 60; sid:9000001; rev:1; )
+alert http $HOME_NET 3000 -> any any ( msg:"HTTP Brute-Force - Repeated 401 Responses"; flow:established,from_server; http.stat_code; content:"401"; threshold:type both, track by_dst, count 5, seconds 60; sid:9000001; rev:1; )
 ```
 
 ---
