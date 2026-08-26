@@ -548,24 +548,33 @@ Phần lớn response là `401 Unauthorized`, đến request cuối (mật khẩ
 
 #### Vấn đề rule gốc
 
-- Chỉ đếm số request POST, không xét response không phân biệt được brute-force thật với user gõ nhầm vài lần rồi login đúng.
-- Threshold cố định 10/30s, dễ né bằng brute-force chậm (low-and-slow).
+Rule ban đầu phát hiện HTTP brute-force dựa trên số lượng request `POST` gửi đến endpoint đăng nhập:
+
+- Chỉ đếm số lượng request, không kiểm tra kết quả xác thực thành công hay thất bại.
+- Các request đăng nhập hợp lệ vẫn được tính vào threshold, có thể làm tăng false positive.
+- Threshold cố định `10 request / 30 giây` có thể không phát hiện được các cuộc brute-force diễn ra chậm hơn (low-and-slow).
 
 #### Hướng tuning
 
-Thêm rule mới bám theo response `401` thay vì chỉ đếm request và chính xác hơn vì loại được các lần login thành công ra khỏi phép đếm.
+Thay vì chỉ theo dõi số lượng request gửi đến endpoint đăng nhập, rule được điều chỉnh để theo dõi các response `401 Unauthorized` từ server.
 
-| SID     | Threshold      | Buffer                     | Mục đích                     |
-| ------- | -------------- | --------------------------- | ------------------------------ |
-| 9000001 | 10 request/30s | `http.uri` (request)        | Đếm tần suất request           |
-| 9000002 | 5 lần 401/60s  | `http.stat_code` (response) | Đếm tần suất thất bại thực tế  |
+Cách này tập trung trực tiếp vào các lần xác thực thất bại và loại các lần đăng nhập thành công khỏi phép đếm.
 
-`track by_dst` ở rule 9000002 vì packet đi chiều from_server đích chính là client (attacker).
+| Phiên bản | SID | Threshold | Buffer | Mục đích |
+| --- | --- | --- | --- | --- |
+| Baseline | `9000001` / `rev:1` | 10 request / 30s | `http.uri` | Phát hiện tần suất request đăng nhập cao |
+| Tuned | `9000001` / `rev:2` | 5 response `401` / 60s | `http.stat_code` | Phát hiện nhiều lần đăng nhập thất bại |
 
-#### Full Rules
+> Rule `rev:2` được sử dụng để thay thế baseline `rev:1`; hai phiên bản không được load đồng thời trong ruleset.
+
+Ở tuned rule, traffic được phân tích theo chiều `from_server`, do đó destination của packet là client thực hiện đăng nhập.
+
+`track by_dst` được sử dụng để theo dõi số lượng response `401` trả về cho từng client.
+
+#### Tuned Rule
 
 ```
-alert http $HOME_NET 3000 -> any any ( msg:"HTTP Brute-Force - Repeated 401 Responses"; flow:established,from_server; http.stat_code; content:"401"; threshold:type both, track by_dst, count 5, seconds 60; sid:9000001; rev:1; )
+alert http $HOME_NET 3000 -> any any ( msg:"HTTP Brute-Force - Repeated 401 Responses"; flow:established,from_server; http.stat_code; content:"401"; threshold:type both, track by_dst, count 5, seconds 60; sid:9000001; rev:2; )
 ```
 
 ---
@@ -577,8 +586,8 @@ alert http $HOME_NET 3000 -> any any ( msg:"HTTP Brute-Force - Repeated 401 Resp
 Rule dưới đây là bản gốc, trước khi tuning:
 
 ```suricata
-alert tcp any any -> any [21,22,23,25,53,80,88,110,135,137,138,139,143,161,389,443,445,465,514,587,636,853,993,995,1194,1433,1720,3306,3389,8080,8443,11211,27017,51820] (msg:"NMAP SYN Scan - Common Ports"; flow:to_server,stateless; flags:S; threshold:type threshold,track by_src,count 20,seconds 10; sid:1100001; rev:1;)
-alert tcp any any -> any ![21,22,23,25,53,80,88,110,135,137,138,139,143,161,389,443,445,465,514,587,636,853,993,995,1194,1433,1720,3306,3389,8080,8443,11211,27017,51820] (msg:"NMAP SYN Scan - Uncommon Port"; flow:to_server,stateless; flags:S; threshold:type threshold,track by_src,count 7,seconds 135; sid:1100002; rev:1;)
+alert tcp any any -> any [21,22,23,25,53,80,88,110,135,137,138,139,143,161,389,443,445,465,514,587,636,853,993,995,1194,1433,1720,3306,3389,8080,8443,11211,27017,51820] (msg:"NMAP SYN Scan - Common Ports"; flow:to_server,stateless; flags:S; threshold:type threshold,track by_src,count 20,seconds 70; sid:1100001; rev:1;)
+alert tcp any any -> any !![21,22,23,25,53,80,88,110,135,137,138,139,143,161,389,443,445,465,514,587,636,853,993,995,1194,1433,1720,3306,3389,8080,8443,11211,27017,51820] (msg:"NMAP SYN Scan - Uncommon Port"; flow:to_server,stateless; flags:S; threshold:type threshold,track by_src,count 7,seconds 135; sid:1100002; rev:1;)
 ```
 
 Ta thêm rule này vào và thực hiện như bước set up lab.
@@ -595,13 +604,13 @@ sudo tcpdump -w nmap-d.pcap -i ens33
 
 Chạy `nmap -sS <target>` từ Kali nhắm vào Metasploitable2/JuiceShop.
 
-<img width="1027" height="537" alt="image" src="https://github.com/user-attachments/assets/b689ef71-c77a-4c2b-9d21-941a5f9e6352" />
+<img width="963" height="557" alt="image" src="https://github.com/user-attachments/assets/5433d94d-e522-4a14-8208-9914b6b040e4" />
 
 #### Suricata Alert
 
-<img width="1572" height="281" alt="image" src="https://github.com/user-attachments/assets/6251568f-46b5-489b-8f2a-2f9e07c0ee93" />
 
-Ta thấy rằng suricata đã bắt được các Common Port và Uncommon Port
+
+Ta thấy rằng suricata đã bắt được các Common Port và Uncommon Port.
 
 #### Wireshark Analysis
 
@@ -636,8 +645,8 @@ Các gói SYN/ACK từ target cho thấy những port mở đã phản hồi tro
 #### Full Rules
 
 ```suricata
-alert tcp any any -> $HOME_NET [21,22,23,25,53,80,88,110,135,137,138,139,143,161,389,443,445,465,514,587,636,853,993,995,1194,1433,1720,3306,3389,8080,8443,11211,27017,51820] (msg:"[TUNED] NMAP SYN Scan - Common Ports"; flow:to_server,stateless; flags:S; threshold:type both, track by_src, count 10, seconds 20; classtype:attempted-recon; sid:1100001; rev:2;)
+alert tcp any any -> $HOME_NET [21,22,23,25,53,80,88,110,135,137,138,139,143,161,389,443,445,465,514,587,636,853,993,995,1194,1433,1720,3306,3389,8080,8443,11211,27017,51820] (msg:"NMAP SYN Scan - Common Ports"; flow:to_server,stateless; flags:S; threshold:type both, track by_src, count 10, seconds 20; classtype:attempted-recon; sid:1100001; rev:2;)
 
-alert tcp any any -> $HOME_NET ![21,22,23,25,53,80,88,110,135,137,138,139,143,161,389,443,445,465,514,587,636,853,993,995,1194,1433,1720,3306,3389,8080,8443,11211,27017,51820] (msg:"[TUNED] NMAP SYN Scan - Uncommon Port"; flow:to_server,stateless; flags:S; threshold:type both, track by_src, count 7, seconds 135; classtype:attempted-recon; sid:1100002; rev:2;)
+alert tcp any any -> $HOME_NET ![21,22,23,25,53,80,88,110,135,137,138,139,143,161,389,443,445,465,514,587,636,853,993,995,1194,1433,1720,3306,3389,8080,8443,11211,27017,51820] (msg:"NMAP SYN Scan - Uncommon Port"; flow:to_server,stateless; flags:S; threshold:type both, track by_src, count 7, seconds 135; classtype:attempted-recon; sid:1100002; rev:2;)
 ```
 
