@@ -41,7 +41,7 @@ Rule dạng **signature/pattern-based**, match trực tiếp payload trong HTTP 
 
 ### Network & Behavioral Detection
 
-Rule dạng **threshold-based**, dựa trên tần suất/hành vi thay vì match nội dung đây là nhóm áp dụng **rule tuning** (điều chỉnh `count`/`seconds`) để cân bằng false positive/negative.
+Rule dạng **threshold-based**, dựa trên tần suất/hành vi thay vì match trực tiếp nội dung payload.
 
 | Rule File | Attack Type |
 |---|---|
