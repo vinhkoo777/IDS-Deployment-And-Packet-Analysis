@@ -33,7 +33,6 @@ Rule dạng **signature/pattern-based**, match trực tiếp payload trong HTTP 
 | [`SSRF-detect.rules`](./rules/SSRF-detect.rules) | Server-Side Request Forgery |
 | [`SSTI-detect.rules`](./rules/SSTI-detect.rules) | Server-Side Template Injection |
 | [`XXE-detect.rules`](./rules/XXE-detect.rules) | XML External Entity |
-| [`File-Upload-detect.rules`](./rules/File-Upload-detect.rules) | Malicious File Upload |
 | [`Malicious-User-Agent-Detect.rules`](./rules/Malicious-User-Agent-Detect.rules) | Recon tool fingerprinting (sqlmap, nikto...) |
 
 - Validated: SQL Injection, SSRF, SSTI, XXE, Malicious User-Agent
