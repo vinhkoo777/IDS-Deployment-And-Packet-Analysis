@@ -383,7 +383,7 @@ xác nhận đây là traffic scan tự động, không phải người dùng th
 
 ## Network & Behavioral Detection
 
-Rule dạng **threshold-based**, dựa trên tần suất/hành vi thay vì match nội dung  đây là nhóm áp dụng **rule tuning** (điều chỉnh `count`/`seconds`) để cân bằng false positive/negative.
+Rule dạng **threshold-based**, dựa trên tần suất/hành vi thay vì match trực tiếp nội dung payload.
 
 ### 1. DoS - SYN Flood
 
@@ -513,9 +513,9 @@ Phần lớn response là `401 Unauthorized`, đến request cuối (mật khẩ
 
 ### 3. Nmap Port Scan
 
-#### Chuẩn bị
+Rule dưới đây được sử dụng để phát hiện Nmap SYN scan, chia traffic thành nhóm **Common Ports** và **Uncommon Ports**:
 
-Rule dưới đây là bản gốc, trước khi tuning:
+#### Chuẩn bị
 
 ```suricata
 alert tcp any any -> any [21,22,23,25,53,80,88,110,135,137,138,139,143,161,389,443,445,465,514,587,636,853,993,995,1194,1433,1720,3306,3389,8080,8443,11211,27017,51820] (msg:"NMAP SYN Scan - Common Ports"; flow:to_server,stateless; flags:S; threshold:type threshold,track by_src,count 20,seconds 10; sid:1100001; rev:1;)
