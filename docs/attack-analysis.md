@@ -42,7 +42,7 @@ Attacker inject SQL payload vào HTTP request nhắm vào OWASP JuiceShop chạy
 Trước khi bắt đầu tấn công, trên máy Suricata ta chạy `tcpdump` để capture traffic song song với Suricata đang monitor.
  
 ```bash
-sudo tcpdump -w dos.pcap -i ens33
+sudo tcpdump -w sqli.pcap -i ens33
 ```
  
 **Trên Kali Linux:**
