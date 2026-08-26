@@ -45,7 +45,7 @@ Rule dạng **threshold-based**, dựa trên tần suất/hành vi thay vì matc
 
 | Rule File | Attack Type |
 |---|---|
-| [`dos-detect-tuned.rules`](./rules/dos-detect.rules) | DoS / SYN Flood |
+| [`dos-detect.rules`](./rules/dos-detect.rules) | DoS / SYN Flood |
 | [`HTTP-Brute-Force-Detect.rules`](./rules/HTTP-Brute-Force-Detect.rules) | HTTP Brute-Force Login |
 | [`Nmap-Scan-Detect.rules`](./rules/Nmap-Scan-Detect.rules) | Port Scan (Nmap SYN) |
 
