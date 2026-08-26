@@ -609,10 +609,8 @@ Ta thấy rằng suricata đã bắt được các Common Port và Uncommon Port
 Filter port bị scan trúng (SYN-ACK từ target):
 
 ```
-tcp.flags.syn==1 && tcp.flags.ack==1 && ip.src==192.168.15.132
+tcp.flags.syn==1 && tcp.flags.ack==1 && ip.src==192.168.15.131
 ```
-
-<img width="1589" height="490" alt="image" src="https://github.com/user-attachments/assets/b190d2e2-b539-4dcd-96b7-a5c3677c752f" />
 
 Hình trên cho ta thấy rằng các port đã bị nmap scan ta có thể đối chiếu lại với kết quả của nmap
 
